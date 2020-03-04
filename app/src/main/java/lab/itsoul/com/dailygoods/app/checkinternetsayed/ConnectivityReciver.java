@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.core.net.ConnectivityManagerCompat;
 
@@ -34,9 +36,18 @@ public class ConnectivityReciver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if(recieverListener != null) {
+        Log.d("sayed","here");
+
+       if(recieverListener != null) {
             recieverListener.onNetworkConnectionChanged(getConnection());
         }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Action: " + intent.getAction() + "\n");
+        sb.append("URI: " + intent.toUri(Intent.URI_INTENT_SCHEME).toString() + "\n");
+        String log = sb.toString();
+        Log.d("sayed", log);
+        Toast.makeText(context, log, Toast.LENGTH_LONG).show();
 
     }
 

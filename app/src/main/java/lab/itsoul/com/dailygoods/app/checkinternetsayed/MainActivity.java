@@ -2,7 +2,10 @@ package lab.itsoul.com.dailygoods.app.checkinternetsayed;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +19,9 @@ public class MainActivity extends AppCompatActivity implements ConnectivityReciv
     private Button checkConnection ;
     private FloatingActionButton goToNewActivity ;
     private TextView textView ;
+    ConnectivityReciver reciver;
+    IntentFilter filter ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,12 +31,20 @@ public class MainActivity extends AppCompatActivity implements ConnectivityReciv
         goToNewActivity = findViewById(R.id.goToNewActivity);
         textView = findViewById(R.id.textView);
         init();
-        checkConnection();
+        //checkConnection();
+        reciver = new ConnectivityReciver();
+        filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+
     }
 
     private void init() {
         checkConnection.setOnClickListener(v -> {
            checkConnection();
+        });
+
+        this.goToNewActivity.setOnClickListener(v -> {
+            startActivity( new Intent(MainActivity.this , SecondActivity.class));
         });
     }
 
@@ -62,11 +76,24 @@ public class MainActivity extends AppCompatActivity implements ConnectivityReciv
     @Override
     protected void onResume() {
         super.onResume();
-        MyApplication.getmInstance().setConnectivityListener(this);
+        this.registerReceiver(reciver, filter);
+        ((MyApplication)getApplication()).setConnectivityListener(this);
     }
 
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         showSnakbar(isConnected);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(reciver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 }

@@ -1,6 +1,7 @@
 package lab.itsoul.com.dailygoods.app.checkinternetsayed;
 
 import android.app.Application;
+import android.util.Log;
 
 public class MyApplication extends Application {
 
@@ -17,6 +18,7 @@ public class MyApplication extends Application {
     }
 
     public void setConnectivityListener ( ConnectivityReciver.ConnectivityRecieverListener listener) {
+        Log.d("sayed", "listener");
         ConnectivityReciver.recieverListener = listener ;
     }
 }
